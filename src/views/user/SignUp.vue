@@ -10,8 +10,8 @@
           <span>注册</span>
       </div>
       <div class="sign-up-form">
-        <el-form :model="signUpDto">
-        <el-form-item>
+        <el-form ref='formRoles' :model="signUpDto" :rules="formRules">
+        <el-form-item prop="mobile">
           <el-input v-model="signUpDto.mobile" placeholder="11位手机号">
             <el-select v-model="value" slot="prepend" placeholder="请选择">
                 <el-option label="+86" value="86"></el-option>
@@ -19,15 +19,18 @@
             </el-select>
           </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="nickname">
+          <el-input v-model="signUpDto.nickname" placeholder="昵称" prefix-icon="el-icon-key"></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
           <el-input type='password' v-model="signUpDto.password" placeholder="至少六位密码，区分大小写" prefix-icon="el-icon-key" show-password></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password2">
           <el-input type='password' v-model="signUpDto.password2" placeholder="密码确认" prefix-icon="el-icon-key" show-password></el-input>
         </el-form-item>
         <el-form-item>
           <div style="display: flex;justify-content: space-between;">
-            <el-button style="width: 50%" type="primary">注册</el-button> <router-link class="sign-in" :to="{path: '/signIn'}">使用已有账号登入</router-link>
+            <el-button style="width: 50%" type="primary" @click="signUp">注册</el-button> <router-link class="sign-in" :to="{path: '/signIn'}">使用已有账号登入</router-link>
           </div>
         </el-form-item>
       </el-form>
@@ -40,21 +43,87 @@
 </template>
 
 <script>
+import {signUp} from '@/api/user'
+
 export default {
   name: 'sign-up',
   data () {
+    const mobileValidator = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('手机号码不能为空'))
+      } else {
+        const reg = /1[1-9]{2}[0-9]{8}/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入11位手机号码'))
+        }
+      }
+    }
+    let pwdValidator = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('密码不能为空'))
+      } else {
+        const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('密码必须含有数字和字母，长度在6-20个字符'))
+        }
+      }
+    }
+    let pwd2Validator = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('确认密码不能为空'))
+      } else {
+        if (this.signUpDto.password !== this.signUpDto.password2) {
+          callback(new Error('两次密码不一致'))
+        } else {
+          callback()
+        }
+      }
+    }
+
     return {
       signUpDto: {
         mobile: '',
+        nickname: '',
         password: '',
         password2: ''
       },
-      value: '86'
+      value: '86',
+      formRules: {
+        mobile: [
+          {validator: mobileValidator, trigger: ['blur', 'change']}
+        ],
+        nickname: [
+          { required: true, message: '请输入昵称', trigger: 'blur' },
+          { max: 20, message: '长度不能超过 20 个字符', trigger: ['blur', 'change'] }
+        ],
+        password: [
+          {validator: pwdValidator, trigger: ['blur', 'change']}
+        ],
+        password2: [
+          {validator: pwd2Validator, trigger: ['blur', 'change']}
+        ]
+      }
     }
   },
   methods: {
     signUp () {
+      this.$refs['formRoles'].validate(valid => {
+        if (valid) {
+          signUp(this.signUpDto).then(data => {
+            this.$message({
+              message: '注册成功',
+              type: 'success',
+              duration: 3000
+            })
 
+            this.$router.push('/signIn')
+          })
+        }
+      })
     }
   }
 }

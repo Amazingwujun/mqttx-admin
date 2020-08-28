@@ -11,20 +11,20 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/layout'
-    },
-    {
-      path: '/layout',
-      redirect: '/layout/helloworld',
-      name: 'Layout',
+      name: 'index',
       component: () => import('@/components/Layout'),
       children: [
         {
-          path: 'helloworld',
+          path: '',
           name: 'helloworld',
           component: () => import('@/components/HelloWorld')
         }
       ]
+    },
+    {
+      path: '/404',
+      component: () => import('@/views/404'),
+      hidden: true
     },
     {
       path: '/signIn',
@@ -35,7 +35,10 @@ const router = new Router({
       path: '/signUp',
       name: 'SignUp',
       component: () => import('@/views/user/SignUp')
-    }
+    },
+
+    // 404 page must be placed at the end !!!
+    { path: '*', redirect: '/404', hidden: true }
   ]
 })
 

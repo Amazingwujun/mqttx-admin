@@ -29,6 +29,8 @@ service.interceptors.response.use(
         type: 'error',
         duration: 2000
       })
+
+      return Promise.reject(new Error())
     } else {
       return data
     }
@@ -50,7 +52,7 @@ service.interceptors.response.use(
       duration: 2000
     })
 
-    // return Promise.reject(error)
+    return Promise.reject(error)
   })
 
 export default service

@@ -136,11 +136,11 @@ export default {
 
       // 密码登入
       this.$refs['ruleForm'].validate(valid => {
-        if (!valid) {
-          signIn(this.loginForm).then(data => {
+        if (valid) {
+          signIn(this.pwdSignInForm).then(data => {
             this.$store.commit('signIn', data)
             this.$router.push('/')
-          })
+          }, () => {})
         }
       })
     },
