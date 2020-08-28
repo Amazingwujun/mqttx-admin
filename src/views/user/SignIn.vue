@@ -7,13 +7,13 @@
         <span class="slogon">易于使用的 mqtt broker</span>
       </div>
       <div class="login-form">
-        <el-tabs stretch>
-          <el-tab-pane label="密码登入">
-            <el-form :model="pwdSignInForm" :rules="formRules">
+        <el-tabs v-model="activeName" stretch>
+          <el-tab-pane label="密码登入" name="pwd">
+            <el-form :model="pwdSignInForm" :rules="formRules" ref='ruleForm'>
               <el-form-item prop="mobile">
                 <el-input v-model="pwdSignInForm.mobile" placeholder="手机号" prefix-icon="el-icon-mobile"></el-input>
               </el-form-item>
-              <el-form-item>
+              <el-form-item prop="password">
                 <el-input
                   v-model="pwdSignInForm.password"
                   type="password"
@@ -24,7 +24,7 @@
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-tab-pane label="验证码登陆">
+          <el-tab-pane label="验证码登陆" name="code">
             <el-form :model="loginForm" :rules="formRules">
               <el-form-item prop="mobile">
                 <el-input v-model="loginForm.mobile" placeholder="手机号" prefix-icon="el-icon-mobile">
@@ -79,6 +79,19 @@ export default {
         }
       }
     }
+    let pwdValidator = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('密码不能为空'))
+      } else {
+        const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('密码必须含有数字和字母，长度在6-20个字符'))
+        }
+      }
+    }
+
     return {
       loginForm: {
         mobile: '',
@@ -89,9 +102,13 @@ export default {
         password: ''
       },
       checkCode: notice,
+      activeName: 'pwd',
       formRules: {
         mobile: [
-          { validator: mobileValidator, trigger: 'blur' }
+          { validator: mobileValidator, trigger: ['blur', 'change'] }
+        ],
+        password: [
+          { validator: pwdValidator, trigger: ['blur', 'change'] }
         ]
       }
     }
@@ -107,12 +124,25 @@ export default {
   },
   methods: {
     signIn () {
-      signIn(this.loginForm).then(
-        (data) => {
-          this.$store.commit('signIn', data)
-          this.$router.push('/')
+      // 暂时不支持验证码登录
+      if (this.activeName === 'code') {
+        this.$message({
+          message: 'mqttx admin 暂不支持验证码登录',
+          type: 'warning',
+          duration: 3000
+        })
+        return
+      }
+
+      // 密码登入
+      this.$refs['ruleForm'].validate(valid => {
+        if (!valid) {
+          signIn(this.loginForm).then(data => {
+            this.$store.commit('signIn', data)
+            this.$router.push('/')
+          })
         }
-      )
+      })
     },
     sendCheckCode () {
       if (typeof this.checkCode === 'number') {

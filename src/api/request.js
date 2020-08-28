@@ -34,15 +34,23 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error)
+    console.log(error.message)
+
+    let msg
+    if (error.message.indexOf('timeout') > -1) {
+      // 请求超时
+      msg = '请求超时'
+    } else {
+      msg = '接口请求异常'
+    }
 
     Message({
-      message: '接口请求异常',
+      message: msg,
       type: 'error',
       duration: 2000
     })
 
-    return Promise.reject(error)
+    // return Promise.reject(error)
   })
 
 export default service

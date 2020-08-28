@@ -11,18 +11,30 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: () => import('@/components/HelloWorld')
+      redirect: '/layout'
+    },
+    {
+      path: '/layout',
+      redirect: '/layout/helloworld',
+      name: 'Layout',
+      component: () => import('@/components/Layout'),
+      children: [
+        {
+          path: 'helloworld',
+          name: 'helloworld',
+          component: () => import('@/components/HelloWorld')
+        }
+      ]
     },
     {
       path: '/signIn',
       name: 'SignIn',
-      component: () => import('@/components/SignIn')
+      component: () => import('@/views/user/SignIn')
     },
     {
       path: '/signUp',
       name: 'SignUp',
-      component: () => import('@/components/SignUp')
+      component: () => import('@/views/user/SignUp')
     }
   ]
 })
@@ -30,7 +42,7 @@ const router = new Router({
 // 路由守卫
 router.beforeEach((to, from, next) => {
   if (store.getters.isSignIn) {
-    if (to.path === '/signIn') {
+    if (to.path === '/signIn' || to.path === '/signUp') {
       next('/')
     } else {
       next()
