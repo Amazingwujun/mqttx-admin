@@ -8,6 +8,7 @@ Vue.use(Router)
 const whiteList = ['/signIn', '/signUp']
 
 const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -35,6 +36,20 @@ const router = new Router({
       path: '/signUp',
       name: 'SignUp',
       component: () => import('@/views/user/SignUp')
+    },
+
+    {
+      path: '/user',
+      name: 'User',
+      redirect: '/user/list',
+      component: () => import('@/components/Layout'),
+      children: [
+        {
+          path: 'list',
+          name: 'UserList',
+          component: () => import('@/views/usermanages/UserList')
+        }
+      ]
     },
 
     // 404 page must be placed at the end !!!

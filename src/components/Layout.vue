@@ -53,5 +53,6 @@ export default {
 .content {
   flex-grow: 1;
   padding: 5px;
+  background-color: #f0f2f5;
 }
 </style>

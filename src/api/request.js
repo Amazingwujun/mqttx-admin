@@ -9,10 +9,9 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    if (store.getters.isLogin) {
-      config.headers['Authorization'] = store.state.user.token
+    if (store.getters.isSignIn) {
+      config.headers['x-token'] = store.state.user.token
     }
-
     return config
   }, error => {
     return Promise.reject(error)

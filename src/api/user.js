@@ -15,3 +15,10 @@ export function signUp (user) {
     data: user
   })
 }
+
+export function getUserList () {
+  return request({
+    url: '/user/userList',
+    method: 'get'
+  })
+}

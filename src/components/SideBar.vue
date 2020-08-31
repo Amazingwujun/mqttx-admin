@@ -9,6 +9,7 @@
       background-color="#191a23"
       text-color="#fff"
       active-text-color="#ffd04b"
+      router
     >
       <el-submenu index="1">
         <template slot="title">
@@ -17,12 +18,12 @@
         </template>
         <el-menu-item index>设备列表</el-menu-item>
       </el-submenu>
-      <el-submenu index="2">
+      <el-submenu index="/user">
         <template slot="title">
           <i class="el-icon-user"></i>
           <span>用户中心</span>
         </template>
-        <el-menu-item index>用户管理</el-menu-item>
+        <el-menu-item index="/user/list">用户列表</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
