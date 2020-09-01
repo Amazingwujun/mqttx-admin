@@ -1,6 +1,8 @@
 <template>
   <div class="nav-bar">
-    <div class="nav-left"></div>
+    <div class="nav-left">
+      <i class="el-icon-s-fold" :class="{'active': isCollapse}" style="font-size: 35px; margin-left: 5px;" @click="collapse"/>
+    </div>
     <div class="nav-right">
       <el-dropdown @command="handleCommand">
         <div class="avatar">
@@ -17,7 +19,7 @@
         <el-dropdown-menu>
           <el-dropdown-item>个人中心</el-dropdown-item>
           <el-dropdown-item>设置</el-dropdown-item>
-          <el-dropdown-item command="signOut" divided>推出登录</el-dropdown-item>
+          <el-dropdown-item command="signOut" divided>退出登入</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -30,6 +32,9 @@ export default {
   computed: {
     nickname () {
       return this.$store.state.user.nickname
+    },
+    isCollapse () {
+      return this.$store.state.isCollapse
     }
   },
   methods: {
@@ -38,6 +43,9 @@ export default {
         this.$store.commit('signOut')
         this.$router.push('/signIn')
       }
+    },
+    collapse () {
+      this.$store.commit('collapse')
     }
   }
 }
@@ -59,5 +67,9 @@ export default {
 
 .avatar {
     cursor: pointer;
+}
+
+.el-icon-s-fold.active {
+  transform: rotate(180deg);
 }
 </style>

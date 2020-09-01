@@ -20,7 +20,10 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="nickname">
-          <el-input v-model="signUpDto.nickname" placeholder="昵称" prefix-icon="el-icon-key"></el-input>
+          <el-input v-model="signUpDto.nickname" placeholder="昵称" prefix-icon="el-icon-user"></el-input>
+        </el-form-item>
+        <el-form-item prop="email">
+          <el-input v-model="signUpDto.email" placeholder="请输入邮箱"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input type='password' v-model="signUpDto.password" placeholder="至少六位密码，区分大小写" prefix-icon="el-icon-key" show-password></el-input>
@@ -60,6 +63,18 @@ export default {
         }
       }
     }
+    let emailValidator = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('邮箱不能为空'))
+      } else {
+        const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱地址'))
+        }
+      }
+    }
     let pwdValidator = (rule, value, callback) => {
       if (!value) {
         callback(new Error('密码不能为空'))
@@ -88,6 +103,7 @@ export default {
       signUpDto: {
         mobile: '',
         nickname: '',
+        email: '',
         password: '',
         password2: ''
       },
@@ -95,6 +111,9 @@ export default {
       formRules: {
         mobile: [
           {validator: mobileValidator, trigger: ['blur', 'change']}
+        ],
+        email: [
+          {validator: emailValidator, trigger: ['blur', 'change']}
         ],
         nickname: [
           { required: true, message: '请输入昵称', trigger: 'blur' },

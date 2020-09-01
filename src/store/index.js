@@ -15,7 +15,8 @@ const user = {
 }
 
 const state = {
-  user
+  user,
+  isCollapse: false
 }
 
 const getters = {
@@ -59,6 +60,10 @@ const mutations = {
   signOut (state) {
     state.user = user
     cookies.remove(CACHE_USER)
+  },
+
+  collapse (state) {
+    state.isCollapse = !state.isCollapse
   }
 }
 

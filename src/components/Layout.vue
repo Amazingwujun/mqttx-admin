@@ -1,8 +1,6 @@
 <template>
   <div class="layout">
-    <div class="sider-bar">
-      <side-bar/>
-    </div>
+    <side-bar/>
     <div class="main">
       <nav-bar></nav-bar>
       <div class="content">
@@ -40,14 +38,6 @@ export default {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-}
-
-.sider-bar {
-  width: 240px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 0 6px rgba(0,21,41,.35);
-  background-color: #191a23;
 }
 
 .content {
