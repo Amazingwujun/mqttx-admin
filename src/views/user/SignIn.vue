@@ -1,5 +1,5 @@
 <template>
-  <div class="login-page">
+  <div class="login-page" @keyup.enter="keyboardAction">
     <div class="main">
       <div class="logo">
         <img src="@/assets/logo.png" width="50%" />
@@ -46,7 +46,7 @@
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-button style="width: 100%;" type="primary" @click="signIn">登入</el-button>
+          <el-button style="width: 100%;" type="primary" :loading="signInBtnVal === '登入中'" v-on:keyup.enter="signIn" @click="signIn">{{signInBtnVal}}</el-button>
           <div class="flex-box-right">
              <router-link class="sign-up" :to="{path: '/signUp'}">注册账号</router-link>
           </div>
@@ -61,6 +61,8 @@
 
 <script>
 import { signIn } from '@/api/user'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 const notice = '发送验证码'
 
@@ -93,6 +95,7 @@ export default {
     }
 
     return {
+      signInBtnVal: '登入',
       loginForm: {
         mobile: '',
         checkCode: ''
@@ -123,7 +126,17 @@ export default {
     }
   },
   methods: {
+    keyboardAction (event) {
+      const {key} = event
+
+      console.log('key:' + key + ' pressed')
+      if (key === 'Enter') {
+        this.signIn()
+      }
+    },
     signIn () {
+      this.signInBtnVal = '登入中'
+
       // 暂时不支持验证码登录
       if (this.activeName === 'code') {
         this.$message({
@@ -131,16 +144,27 @@ export default {
           type: 'warning',
           duration: 3000
         })
+        this.signInBtnVal = '登入'
         return
       }
 
       // 密码登入
       this.$refs['ruleForm'].validate(valid => {
+        NProgress.start()
+
         if (valid) {
           signIn(this.pwdSignInForm).then(data => {
+            this.signInBtnVal = '登入'
+            console.log(data)
             this.$store.commit('signIn', data)
             this.$router.push('/')
-          }, () => {})
+          }, () => {
+            this.signInBtnVal = '登入'
+            NProgress.done()
+          })
+        } else {
+          this.signInBtnVal = '登入'
+          NProgress.done()
         }
       })
     },

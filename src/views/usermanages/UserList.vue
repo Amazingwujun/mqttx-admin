@@ -1,7 +1,7 @@
 <template>
   <div class="user-list">
     <el-card>
-      <el-table :data="userList" style="width: 100%" border>
+      <el-table :data="userList" border>
         <el-table-column label="id" prop="id" ></el-table-column>
         <el-table-column label="昵称" prop="nickname"></el-table-column>
         <el-table-column label="手机号" prop="mobile"></el-table-column>
@@ -25,6 +25,7 @@ export default {
   },
   created: function () {
     getUserList().then(data => {
+      console.log(data)
       this.userList = data
     }, () => {})
   }

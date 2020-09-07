@@ -1,7 +1,13 @@
 <template>
   <div class="nav-bar">
     <div class="nav-left">
-      <i class="el-icon-s-fold" :class="{'active': isCollapse}" style="font-size: 35px; margin-left: 5px;" @click="collapse"/>
+    <div >
+      <i class="el-icon-s-fold" :class="{'active': isCollapse}" style="font-size: 35px;margin-right: 10px" @click="collapse"/>
+    </div>
+      <el-breadcrumb>
+        <el-breadcrumb-item>首页</el-breadcrumb-item>
+        <el-breadcrumb-item>用户中心</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
     <div class="nav-right">
       <el-dropdown @command="handleCommand">
@@ -59,6 +65,12 @@ export default {
   justify-content: space-between;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
   border-bottom: solid 1px #e6e6e6;
+}
+
+.nav-left {
+  display: flex;
+  margin-left: 15px;
+  align-items: center;
 }
 
 .nav-right {

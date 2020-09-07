@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+// 简单配置
+NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 Vue.use(Router)
 
@@ -52,6 +57,20 @@ const router = new Router({
       ]
     },
 
+    {
+      path: '/topic',
+      name: 'Topic',
+      redirect: '/topic/list',
+      component: () => import('@/components/Layout'),
+      children: [
+        {
+          path: 'list',
+          name: 'TopicList',
+          component: () => import('@/views/topic/Table')
+        }
+      ]
+    },
+
     // 404 page must be placed at the end !!!
     { path: '*', redirect: '/404', hidden: true }
   ]
@@ -62,6 +81,7 @@ router.beforeEach((to, from, next) => {
   if (store.getters.isSignIn) {
     if (to.path === '/signIn' || to.path === '/signUp') {
       next('/')
+      NProgress.done()
     } else {
       next()
     }
@@ -71,8 +91,11 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next('/signIn')
+      NProgress.done()
     }
   }
 })
+
+router.afterEach(() => { NProgress.done() })
 
 export default router

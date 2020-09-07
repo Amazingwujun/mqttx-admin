@@ -14,12 +14,12 @@
       router
       :collapse="isCollapse"
     >
-      <el-submenu index="1">
+      <el-submenu index="/topic">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span slot="title">设备中心</span>
+          <span slot="title">主题中心</span>
         </template>
-        <el-menu-item index="/">设备列表</el-menu-item>
+        <el-menu-item index="/topic/list">主题列表</el-menu-item>
       </el-submenu>
       <el-submenu index="/user">
         <template slot="title">
