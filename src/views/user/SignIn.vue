@@ -85,7 +85,7 @@ export default {
       if (!value) {
         callback(new Error('密码不能为空'))
       } else {
-        const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/
+        const reg = /^(?=.*[a-zA-Z])(?=.*\d)[\s\S]{8,20}$/
         if (reg.test(value)) {
           callback()
         } else {
